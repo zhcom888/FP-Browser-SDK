@@ -1,0 +1,254 @@
+from .permission_type import PermissionType
+
+PermissionType93 = {
+    # "DEFAULT" is only used as an argument to the Content Settings Window
+    # opener; there it means "whatever was last shown".
+    PermissionType.DEFAULT: -1,
+    PermissionType.COOKIES: 0,
+    PermissionType.IMAGES: 1,
+    PermissionType.JAVASCRIPT: 2,
+
+    # This setting governs both popups and unwanted redirects like tab-unders and
+    # framebusting.
+    # TODO(csharrison): Consider renaming it to POPUPS_AND_REDIRECTS, but it
+    # might not be worth the trouble.
+    PermissionType.POPUPS: 3,
+
+    PermissionType.GEOLOCATION: 4,
+    PermissionType.NOTIFICATIONS: 5,
+    PermissionType.AUTO_SELECT_CERTIFICATE: 6,
+    PermissionType.MIXEDSCRIPT: 7,
+    PermissionType.MEDIASTREAM_MIC: 8,
+    PermissionType.MEDIASTREAM_CAMERA: 9,
+    PermissionType.PROTOCOL_HANDLERS: 10,
+    PermissionType.PPAPI_BROKER: 11,
+    PermissionType.AUTOMATIC_DOWNLOADS: 12,
+    PermissionType.MIDI_SYSEX: 13,
+    PermissionType.SSL_CERT_DECISIONS: 14,
+    PermissionType.PROTECTED_MEDIA_IDENTIFIER: 15,
+    PermissionType.APP_BANNER: 16,
+    PermissionType.SITE_ENGAGEMENT: 17,
+    PermissionType.DURABLE_STORAGE: 18,
+    PermissionType.USB_CHOOSER_DATA: 19,
+    PermissionType.BLUETOOTH_GUARD: 20,
+    PermissionType.BACKGROUND_SYNC: 21,
+    PermissionType.AUTOPLAY: 22,
+    PermissionType.IMPORTANT_SITE_INFO: 23,
+    PermissionType.PERMISSION_AUTOBLOCKER_DATA: 24,
+    PermissionType.ADS: 25,
+
+    # Website setting which stores metadata for the subresource filter to aid in
+    # decisions for whether or not to show the UI.
+    PermissionType.ADS_DATA: 26,
+
+    # This is special-cased in the permissions layer to always allow, and as
+    # such doesn't have associated prefs data.
+    PermissionType.MIDI: 27,
+
+    # This content setting type is for caching password protection service's
+    # verdicts of each origin.
+    PermissionType.PASSWORD_PROTECTION: 28,
+
+    # Website setting which stores engagement data for media related to a
+    # specific origin.
+    PermissionType.MEDIA_ENGAGEMENT: 29,
+
+    # Content setting which stores whether or not the site can play audible
+    # sound. This will not block playback but instead the user will not hear it.
+    PermissionType.SOUND: 30,
+
+    # Website setting which stores the list of client hints (and the preference
+    # expiration time for each of the client hints) that the origin requested
+    # the browser to remember. Spec:
+    # http://httpwg.org/http-extensions/client-hints.html#accept-ch-lifetime.
+    # The setting is stored as a dictionary that includes the mapping from
+    # different client hints to their respective expiration times (seconds since
+    # epoch). The browser is expected to send all the unexpired client hints in
+    # the HTTP request headers for every resource requested from that origin.
+    PermissionType.CLIENT_HINTS: 31,
+
+    # Generic Sensor API covering ambient-light-sensor, accelerometer, gyroscope
+    # and magnetometer are all mapped to a single content_settings_type.
+    # Setting for the Generic Sensor API covering ambient-light-sensor,
+    # accelerometer, gyroscope and magnetometer. These are all mapped to a single
+    # ContentSettingsType.
+    PermissionType.SENSORS: 32,
+
+    # Content setting which stores whether or not the user has granted the site
+    # permission to respond to accessibility events, which can be used to
+    # provide a custom accessibility experience. Requires explicit user consent
+    # because some users may not want sites to know they're using assistive
+    # technology.
+    PermissionType.ACCESSIBILITY_EVENTS: 33,
+
+    # Used to store whether to allow a website to install a payment handler.
+    PermissionType.PAYMENT_HANDLER: 34,
+
+    # Content setting which stores whether to allow sites to ask for permission
+    # to access USB devices. If this is allowed specific device permissions are
+    # stored under USB_CHOOSER_DATA.
+    PermissionType.USB_GUARD: 35,
+
+    # Nothing is stored in this setting at present. Please refer to
+    # BackgroundFetchPermissionContext for details on how this permission
+    # is ascertained.
+    PermissionType.BACKGROUND_FETCH: 36,
+
+    # Website setting which stores the amount of times the user has dismissed
+    # intent picker UI without explicitly choosing an option.
+    PermissionType.INTENT_PICKER_DISPLAY: 37,
+
+    # Used to store whether to allow a website to detect user active/idle state.
+    PermissionType.IDLE_DETECTION: 38,
+
+    # Content settings for access to serial ports. The "guard" content setting
+    # stores whether to allow sites to ask for permission to access a port. The
+    # permissions granted to access particular ports are stored in the "chooser
+    # data" website setting.
+    PermissionType.SERIAL_GUARD: 39,
+    PermissionType.SERIAL_CHOOSER_DATA: 40,
+
+    # Nothing is stored in this setting at present. Please refer to
+    # PeriodicBackgroundSyncPermissionContext for details on how this permission
+    # is ascertained.
+    # This content setting is not registered because it does not require access
+    # to any existing providers.
+    PermissionType.PERIODIC_BACKGROUND_SYNC: 41,
+
+    # Content setting which stores whether to allow sites to ask for permission
+    # to do Bluetooth scanning.
+    PermissionType.BLUETOOTH_SCANNING: 42,
+
+    # Content settings for access to HID devices. The "guard" content setting
+    # stores whether to allow sites to ask for permission to access a device. The
+    # permissions granted to access particular devices are stored in the "chooser
+    # data" website setting.
+    PermissionType.HID_GUARD: 43,
+    PermissionType.HID_CHOOSER_DATA: 44,
+
+    # Wake Lock API, which has two lock types: screen and system locks.
+    # Currently, screen locks do not need any additional permission, and system
+    # locks are always denied while the right UI is worked out.
+    PermissionType.WAKE_LOCK_SCREEN: 45,
+    PermissionType.WAKE_LOCK_SYSTEM: 46,
+
+    # Legacy SameSite cookie behavior. This disables SameSiteByDefaultCookies,
+    # CookiesWithoutSameSiteMustBeSecure, and SchemefulSameSite, forcing the
+    # legacy behavior wherein cookies that don't specify SameSite are treated as
+    # SameSite=None, SameSite=None cookies are not required to be Secure, and
+    # schemeful same-site is not active.
+    #
+    # This will also be used to revert to legacy behavior when future changes
+    # in cookie handling are introduced.
+    PermissionType.LEGACY_COOKIE_ACCESS: 47,
+
+    # Content settings which stores whether to allow sites to ask for permission
+    # to save changes to an original file selected by the user through the
+    # File System Access API.
+    PermissionType.FILE_SYSTEM_WRITE_GUARD: 48,
+
+    # Content settings for installed web apps that browsing history may be
+    # inferred from e.g. last update check timestamp.
+    PermissionType.INSTALLED_WEB_APP_METADATA: 49,
+
+    # Used to store whether to allow a website to exchange data with NFC devices.
+    PermissionType.NFC: 50,
+
+    # Website setting to store permissions granted to access particular Bluetooth
+    # devices.
+    PermissionType.BLUETOOTH_CHOOSER_DATA: 51,
+
+    # Full access to the system clipboard (sanitized read without user gesture,
+    # and unsanitized read and write with user gesture).
+    # TODO(https://crbug.com/1027225): Move CLIPBOARD_READ_WRITE uses to be
+    # ordered in the same order as listed in the enum.
+    PermissionType.CLIPBOARD_READ_WRITE: 52,
+
+    # This is special-cased in the permissions layer to always allow, and as
+    # such doesn't have associated prefs data.
+    # TODO(https://crbug.com/1027225): Move CLIPBOARD_SANITIZED_WRITE uses to be
+    # ordered in the same order as listed in the enum.
+    PermissionType.CLIPBOARD_SANITIZED_WRITE: 53,
+
+    # This content setting type is for caching safe browsing real time url
+    # check's verdicts of each origin.
+    PermissionType.SAFE_BROWSING_URL_CHECK_DATA: 54,
+
+    # Used to store whether a site is allowed to request AR or VR sessions with
+    # the WebXr Device API.
+    PermissionType.VR: 55,
+    PermissionType.AR: 56,
+
+    # Content setting which stores whether to allow site to open and read files
+    # and directories selected through the File System Access API.
+    PermissionType.FILE_SYSTEM_READ_GUARD: 57,
+
+    # Access to first party storage in a third-party context. Exceptions are
+    # scoped to the combination of requesting/top-level origin, and are managed
+    # through the Storage Access API. For the time being, this content setting
+    # exists in parallel to third-party cookie rules stored in COOKIES.
+    # TODO(https://crbug.com/989663): Reconcile the two.
+    PermissionType.STORAGE_ACCESS: 58,
+
+    # Content setting which stores whether to allow a site to control camera
+    # movements. It does not give access to camera.
+    PermissionType.CAMERA_PAN_TILT_ZOOM: 59,
+
+    # Content setting for Screen Enumeration and Window Placement functionality.
+    # Permits access to information about the screens, like size and position.
+    # Permits creating and placing windows across the set of connected screens.
+    PermissionType.WINDOW_PLACEMENT: 60,
+
+    # Stores whether to allow insecure websites to make private network requests.
+    # See also: https://wicg.github.io/cors-rfc1918
+    # Set through enterprise policies only.
+    PermissionType.INSECURE_PRIVATE_NETWORK: 61,
+
+    # Content setting which stores whether or not a site can access low-level
+    # locally installed font data using the Font Access API.
+    PermissionType.FONT_ACCESS: 62,
+
+    # Stores per-origin state for permission auto-revocation (for all permission
+    # types).
+    PermissionType.PERMISSION_AUTOREVOCATION_DATA: 63,
+
+    # Stores per-origin state of the most recently selected directory for the use
+    # by the File System Access API.
+    PermissionType.FILE_SYSTEM_LAST_PICKED_DIRECTORY: 64,
+
+    # Capture the current tab using getCurrentBrowsingContextMedia().
+    # TODO(crbug.com/1150788): Apply this to getDisplayMedia() as well.
+    # No values are stored for this type, this is solely needed to be able to
+    # register the PermissionContext.
+    PermissionType.DISPLAY_CAPTURE: 65,
+
+    # Register file-type associations with the operating system and obtain
+    # read-only access to files that the user chooses to open with this
+    # installed web application from the system file manager. This setting has
+    # no effect on the File System API, <input type="file">, or the ability to
+    # access files through drag & drop or clipboard paste operations.
+    PermissionType.FILE_HANDLING: 66,
+
+    # Website setting to store permissions metadata granted to paths on the local
+    # file system via the File System Access API. |FILE_SYSTEM_WRITE_GUARD| is
+    # the corresponding "guard" setting.
+    PermissionType.FILE_SYSTEM_ACCESS_CHOOSER_DATA: 67,
+
+    # Stores a grant for the browser to intermediate or allow without
+    # restriction sharing of identity information by an identity provider to
+    # specified relying parties. The setting is associated with the identity
+    # provider's origin.
+    # This is managed by WebID.
+    PermissionType.FEDERATED_IDENTITY_SHARING: 68,
+
+    # Stores a grant that allows a relying party to send a request for identity
+    # information to specified identity providers, potentially through any
+    # anti-tracking measures that would otherwise prevent it. This setting is
+    # associated with the relying party's origin.
+    PermissionType.FEDERATED_IDENTITY_REQUEST: 69,
+
+    # Whether to use the v8 optimized JIT for running JavaScript on the page.
+    PermissionType.JAVASCRIPT_JIT: 70,
+
+    PermissionType.NUM_TYPES: 71,
+}
