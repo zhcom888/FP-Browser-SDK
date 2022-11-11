@@ -6,6 +6,8 @@
 ## 项目介绍
 浏览器属性注入参数 SDK
 
+>注意：该项目需要使用完整指纹浏览器 apk 才能正常使用，请联系我下载。
+
 ## 相关开源项目
 * [FP-Browser-Public 浏览器底层动态注入](https://github.com/tyua07/FP-Browser-Public) 
 * [FP-Browser-Detect 浏览器属性检测](https://github.com/tyua07/FP-Browser-Detect)
