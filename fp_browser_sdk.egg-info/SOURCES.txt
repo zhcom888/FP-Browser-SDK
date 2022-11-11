@@ -1,3 +1,4 @@
+README.md
 setup.py
 fp_browser_sdk/__init__.py
 fp_browser_sdk/fp_browser_settings.py
@@ -5,6 +6,8 @@ fp_browser_sdk.egg-info/PKG-INFO
 fp_browser_sdk.egg-info/SOURCES.txt
 fp_browser_sdk.egg-info/dependency_links.txt
 fp_browser_sdk.egg-info/top_level.txt
+fp_browser_sdk/data/__init__.py
+fp_browser_sdk/data/motion.py
 fp_browser_sdk/ext/__init__.py
 fp_browser_sdk/ext/basic.py
 fp_browser_sdk/ext/battery.py

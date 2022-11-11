@@ -1,33 +1,33 @@
 from .fp_browser_settings import FPBrowserSettings
-from ext.basic import Basic
-from ext.navigator import Navigator
-from ext.client_hints import ClientHints
-from ext.screen import Screen
-from ext.header import Cookie, Header
-from ext.webrtc import Webrtc
-from ext.battery import Battery
-from ext.fingerprint_offset import FingerprintOffset
-from ext.document import Document, VideoSupport, DocumetMatch
-from ext.media import Media
-from ext.network import Network
-from ext.device_motion import DeviceMotion
-from ext.device_orientation import DeviceOrientation
-from ext.speech_synthesis_voice import SpeechSynthesisVoice, SpeechSynthesisVoiceItem
-from ext.browser_enum import TLSVersion, Platform, CompatMode, \
+from .ext.basic import Basic
+from .ext.navigator import Navigator
+from .ext.client_hints import ClientHints
+from .ext.screen import Screen
+from .ext.header import Cookie, Header
+from .ext.webrtc import Webrtc
+from .ext.battery import Battery
+from .ext.fingerprint_offset import FingerprintOffset
+from .ext.document import Document, VideoSupport, DocumetMatch
+from .ext.media import Media
+from .ext.network import Network
+from .ext.device_motion import DeviceMotion
+from .ext.device_orientation import DeviceOrientation
+from .ext.speech_synthesis_voice import SpeechSynthesisVoice, SpeechSynthesisVoiceItem
+from .ext.browser_enum import TLSVersion, Platform, CompatMode, \
     SpeechSynthesisVoiceAppendMode, PerformanceNavigationType, MaxTouchPoint, \
     WebConnectionType, WebEffectiveConnectionType, ScreenOrientationType, ScreenColorDepth, CookieSameSite, MatchType
-from ext.inject_js import InjectJS
-from ext.exception import MotionErrorException
+from .ext.inject_js import InjectJS
+from .ext.exception import MotionErrorException
 import json
 import random
 import os
-from fp_browser.fp_browser.data.motion import motion_result
-from ext.performance import Performance, PerformanceMatch
+from .data.motion import motion_result
+from .ext.performance import Performance, PerformanceMatch
 from .ext.permission_types import PermissionType, get_permission_type
 
 
 class ConfigConvertSetting(object):
-    def __init__(self, key, config: dict = None, config_path: str = None, browser_version: int = 102):
+    def __init__(self, config: dict = None, config_path: str = None, browser_version: int = 102):
         if config_path is not None:
             config = self.get_config(file=config_path)
 
@@ -40,7 +40,7 @@ class ConfigConvertSetting(object):
 
         self.config = config
         self.browser_version = browser_version
-        self.settings = FPBrowserSettings(key=key)
+        self.settings = FPBrowserSettings()
         pass
 
     def get_config(self, file):
@@ -139,15 +139,16 @@ class ConfigConvertSetting(object):
 
         self.settings.add_module(navigator)
 
-        performance = Performance() \
-            .append_match(PerformanceMatch() \
-                          .set_match_type(MatchType.FULL) \
-                          .set_target_url(url_match['target-url']) \
-                          .set_navigation_redirect_count(0) \
-                          .set_navigation_type(PerformanceNavigationType.NAVIGATE)
-                          )
+        if url_match is not None and 'target-url' in url_match:
+            performance = Performance() \
+                .append_match(PerformanceMatch() \
+                              .set_match_type(MatchType.FULL) \
+                              .set_target_url(url_match['target-url']) \
+                              .set_navigation_redirect_count(0) \
+                              .set_navigation_type(PerformanceNavigationType.NAVIGATE)
+                              )
 
-        self.settings.add_module(performance)
+            self.settings.add_module(performance)
 
         return self
 
@@ -158,18 +159,20 @@ class ConfigConvertSetting(object):
         document = Document() \
             .set_is_trusted(True) \
             .set_charset('UTF-8') \
-            .set_lastModified(url_match['match-tlm']) \
             .set_compat_mode(CompatMode(self.config['compatMode']))
 
-        match = DocumetMatch() \
-            .set_match_type(MatchType.FULL) \
-            .set_target_url(url_match['target-url']) \
-            .set_title(url_match['match-title']) \
-            .set_document_referrer(url_match['match-referrer']) \
-            .set_header_referrer("") \
-            .set_current_url(url_match['match-url'])
+        if url_match is not None:
+            document = document.set_lastModified(url_match['match-tlm'])
 
-        document.append_match_list(match)
+            match = DocumetMatch() \
+                .set_match_type(MatchType.FULL) \
+                .set_target_url(url_match['target-url']) \
+                .set_title(url_match['match-title']) \
+                .set_document_referrer(url_match['match-referrer']) \
+                .set_header_referrer("") \
+                .set_current_url(url_match['match-url'])
+
+            document.append_match_list(match)
 
         if len(self.config['support_video']) > 0:
             for (index, value) in enumerate(self.config['support_video']):
@@ -235,10 +238,18 @@ class ConfigConvertSetting(object):
         self.settings.add_module(clientHints)
         return self
 
-    def set_header(self, cookie: list, domain: str):
+    def set_header(self, cookie: list):
         """
         header
         """
+        if cookie and len(cookie) > 0:
+            header = Header().set_cookie_status(True)
+            for item in cookie:
+                header = header.append_cookie(Cookie().set_port(item['port']).set_domain(item['domain']).set_name(
+                    item['name']).set_value(item['value']).set_same_site(
+                    CookieSameSite.NO_RESTRICTION).set_secure(True))
+
+            self.settings.add_module(header)
         return self
 
     def random_local_ip(self, connection_type: WebConnectionType):
@@ -370,8 +381,8 @@ class ConfigConvertSetting(object):
         self.settings.add_module(orientation)
         return self
 
-    def handle(self, cookie: list, cookie_domain: str, real_ip: str, connection_type: WebConnectionType,
-               effective_type: WebEffectiveConnectionType, version_info_number, url_match: dict,
+    def handle(self, cookie: list, real_ip: str, connection_type: WebConnectionType,
+               effective_type: WebEffectiveConnectionType, version_info_number="100.0.4896.88", url_match=None,
                disable_client_hints=True):
         """
         解析参数
@@ -380,7 +391,7 @@ class ConfigConvertSetting(object):
             .set_navigator(url_match=url_match, version_info_number=version_info_number) \
             .set_document(url_match=url_match) \
             .set_screen() \
-            .set_header(cookie=cookie, domain=cookie_domain) \
+            .set_header(cookie=cookie) \
             .set_fingerprint_offset() \
             .set_clientHints(disable_client_hints) \
             .set_webrtc(real_ip=real_ip, connection_type=connection_type) \

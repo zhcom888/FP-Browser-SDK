@@ -2,8 +2,7 @@ from .ext.module import Module
 
 
 class FPBrowserSettings(object):
-    def __init__(self, key):
-        self.key = key
+    def __init__(self):
         self.modules = []
         pass
 
