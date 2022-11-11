@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fp_browser_sdk',
-    version='0.1',
+    version='0.2',
     keywords='指纹浏览器 sdk',
     license='MIT License',
     author='Yifan',
